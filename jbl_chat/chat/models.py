@@ -2,7 +2,7 @@ from email import message
 from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth import get_user_model
-from uuid import uuid4
+import uuid
 
 User = get_user_model()
 
@@ -18,23 +18,32 @@ class TrackabelModel(models.Model):
         abstract = True
 
 
-def _generate_unique_uri():
-    """Generates a unique uri for the chat session."""
-    return str(uuid4()).replace("-", "")[:15]
-
-
 class ChatRoom(TrackabelModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=32)
+    members = models.ManyToManyField(
+        User, related_name="chatrooms", through="ChatRoomMember"
+    )
 
-    guid = models.URLField(default=_generate_unique_uri)
+    def __str__(self):
+        return self.name
 
 
+# I made a custom MTM-through-table since we might need extra fields
+# and it is difficult to add a through-table after the database is created
 class ChatRoomMember(TrackabelModel):
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    chatRoom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{} @ {}".format(self.member.__str__(), self.chatRoom.__str__())
 
 
 class ChatRoomMessage(TrackabelModel):
 
     message = models.TextField()
-    user = models.ForeignKey(ChatRoomMember, on_delete=models.PROTECT)
-    chatRoom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE)
+    member = models.ForeignKey(ChatRoomMember, on_delete=models.PROTECT)
+    chatRoom = models.ForeignKey(
+        ChatRoom, related_name="messages", on_delete=models.CASCADE
+    )
