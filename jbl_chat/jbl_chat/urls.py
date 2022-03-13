@@ -19,7 +19,7 @@ from chat import views
 
 router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet)
-router.register(r"rooms", views.ChatRoomViewSet)
+router.register(r"rooms", views.ChatRoomViewSet, basename="room")
 router.register(r"groups", views.GroupViewSet)
 router.register(r"members", views.ChatRoomMemberViewSet)
 router.register(r"messages", views.ChatRoomMessageViewSet)
@@ -27,7 +27,9 @@ router.register(r"messages", views.ChatRoomMessageViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path("api/", include(router.urls)), # endpoint always points to the latest version of the API
-    path("api/v0/", include(router.urls)), # Able to use different versions of the API
+    path(
+        "api/", include(router.urls)
+    ),  # endpoint always points to the latest version of the API
+    path("api/v0/", include(router.urls)),  # Able to use different versions of the API
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

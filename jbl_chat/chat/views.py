@@ -25,8 +25,10 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
     API endpoint that allows chatrooms to be viewed or edited.
     """
 
-    queryset = ChatRoom.objects.all().order_by("create_date")
     serializer_class = ChatroomSerializer
+
+    def get_queryset(self):
+        return ChatRoom.objects.filter(members__exact=self.request.user.id)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
