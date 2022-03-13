@@ -18,7 +18,7 @@ from rest_framework import routers
 from chat import views
 
 router = routers.DefaultRouter()
-router.register(r"users", views.UserViewSet)
+router.register(r"users", views.UserViewSet, basename="user")
 router.register(r"rooms", views.ChatRoomViewSet, basename="room")
 router.register(r"groups", views.GroupViewSet)
 router.register(r"members", views.ChatRoomMemberViewSet)
