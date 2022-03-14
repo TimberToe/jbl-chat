@@ -65,5 +65,7 @@ class ChatRoomMessageViewSet(viewsets.ModelViewSet):
 
         serializer.save(
             chatRoom=ChatRoom.objects.get(pk=self.kwargs["chatRoom_pk"]),
-            member=ChatRoomMember.objects.get(member=self.request.user.id)
+            member=ChatRoomMember.objects.get(
+                member=self.request.user.id, chatRoom=self.kwargs["chatRoom_pk"]
+            ),
         )
