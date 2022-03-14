@@ -20,7 +20,7 @@ class TrackabelModel(models.Model):
 
 class ChatRoom(TrackabelModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, null=True, blank=True)
     members = models.ManyToManyField(
         User, related_name="chatrooms", through="ChatRoomMember"
     )
