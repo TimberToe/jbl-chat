@@ -43,7 +43,7 @@ class ChatRoomMember(TrackabelModel):
 class ChatRoomMessage(TrackabelModel):
 
     message = models.TextField()
-    member = models.ForeignKey(ChatRoomMember, on_delete=models.PROTECT)
+    member = models.ForeignKey(ChatRoomMember, on_delete=models.CASCADE)
     chatRoom = models.ForeignKey(
         ChatRoom, related_name="messages", on_delete=models.CASCADE
     )
