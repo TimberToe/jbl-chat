@@ -56,5 +56,14 @@ class ChatRoomMessageViewSet(viewsets.ModelViewSet):
     API endpoint that allows ChatRoomMessage to be viewed or edited.
     """
 
-    queryset = ChatRoomMessage.objects.all()
     serializer_class = ChatRoomMessageSerializer
+
+    def get_queryset(self):
+        return ChatRoomMessage.objects.filter(chatRoom=self.kwargs["chatRoom_pk"])
+
+    def perform_create(self, serializer):
+
+        serializer.save(
+            chatRoom=ChatRoom.objects.get(pk=self.kwargs["chatRoom_pk"]),
+            member=ChatRoomMember.objects.get(member=self.request.user.id)
+        )

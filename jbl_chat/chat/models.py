@@ -47,3 +47,7 @@ class ChatRoomMessage(TrackabelModel):
     chatRoom = models.ForeignKey(
         ChatRoom, related_name="messages", on_delete=models.CASCADE
     )
+    postedTime = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{}: {}".format(self.member.__str__(), self.message)

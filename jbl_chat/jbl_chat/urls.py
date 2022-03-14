@@ -13,23 +13,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from cgitb import lookup
+from django.contrib import admin
 from django.urls import include, path
-from rest_framework import routers
+from rest_framework_nested import routers
 from chat import views
+from django.contrib import admin
 
 router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet, basename="user")
 router.register(r"rooms", views.ChatRoomViewSet, basename="room")
+
+chatroom_router = routers.NestedSimpleRouter(router, r"rooms", lookup="chatRoom")
+chatroom_router.register(
+    r"messages", views.ChatRoomMessageViewSet, basename="room-messages"
+)
+
 router.register(r"groups", views.GroupViewSet)
 router.register(r"members", views.ChatRoomMemberViewSet)
-router.register(r"messages", views.ChatRoomMessageViewSet)
+router.register(r"messages", views.ChatRoomMessageViewSet, basename="messages")
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path(
-        "api/", include(router.urls)
-    ),  # endpoint always points to the latest version of the API
-    path("api/v0/", include(router.urls)),  # Able to use different versions of the API
+    path("api/", include(router.urls)),
+    path("api/", include(chatroom_router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("admin/", admin.site.urls),
 ]

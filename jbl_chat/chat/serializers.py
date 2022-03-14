@@ -19,9 +19,11 @@ class ChatRoomMemberSerializer(serializers.ModelSerializer):
 
 
 class ChatRoomMessageSerializer(serializers.ModelSerializer):
+    member = ChatRoomMemberSerializer(read_only=True)
+
     class Meta:
         model = ChatRoomMessage
-        fields = ["message", "member"]
+        fields = ["message", "postedTime", "member"]
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
