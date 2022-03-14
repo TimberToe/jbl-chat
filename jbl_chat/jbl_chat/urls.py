@@ -29,10 +29,6 @@ chatroom_router.register(
     r"messages", views.ChatRoomMessageViewSet, basename="room-messages"
 )
 
-router.register(r"groups", views.GroupViewSet)
-router.register(r"members", views.ChatRoomMemberViewSet)
-router.register(r"messages", views.ChatRoomMessageViewSet, basename="messages")
-
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [

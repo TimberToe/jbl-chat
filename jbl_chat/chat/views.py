@@ -1,11 +1,10 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from chat.models import ChatRoom, ChatRoomMember, ChatRoomMessage
 from rest_framework import viewsets
 from rest_framework import permissions
 from .serializers import (
     ChatRoomMemberSerializer,
     UserSerializer,
-    GroupSerializer,
     ChatroomSerializer,
     ChatRoomMessageSerializer,
 )
@@ -31,15 +30,6 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return ChatRoom.objects.filter(members__exact=self.request.user.id)
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
 
 
 class ChatRoomMemberViewSet(viewsets.ModelViewSet):
