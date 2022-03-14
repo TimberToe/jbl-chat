@@ -10,9 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ChatRoomMemberSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source="member.id")
+    name = serializers.ReadOnlyField(source="member.username")
+
     class Meta:
         model = ChatRoomMember
-        fields = ["member", "chatRoom"]
+        fields = ["id", "name"]
 
 
 class ChatRoomMessageSerializer(serializers.ModelSerializer):
@@ -22,11 +25,11 @@ class ChatRoomMessageSerializer(serializers.ModelSerializer):
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
-    messages = ChatRoomMessageSerializer(many=True, read_only=True)
+    members = ChatRoomMemberSerializer(source="chatroommember_set", many=True)
 
     class Meta:
         model = ChatRoom
-        fields = ["id", "name", "messages"]
+        fields = ["id", "name", "members"]
 
 
 class GroupSerializer(serializers.ModelSerializer):
