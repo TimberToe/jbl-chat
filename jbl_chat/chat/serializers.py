@@ -27,13 +27,30 @@ class ChatRoomMessageSerializer(serializers.ModelSerializer):
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
-    members = serializers.PrimaryKeyRelatedField(many=True, 
-    read_only=False,
-    queryset=User.objects.all())
+    members = serializers.PrimaryKeyRelatedField(
+        many=True, read_only=False, queryset=User.objects.all()
+    )
 
     class Meta:
         model = ChatRoom
         fields = ["id", "name", "members"]
+
+    def create(self, validated_data):
+
+        members = validated_data.pop("members", [])
+
+        query = ChatRoom.objects.filter(members__id=members.pop().id)
+        for member in members:
+            query &= ChatRoom.objects.filter(members__id=member.id)
+
+        print(query)
+        if query.exists():
+            print("ROOM EXISTS----------------------------------------")
+            return query.get()
+
+        print("ROOM NOOOO EXISTS----------------------------------------")
+
+        return ChatRoom.objects.create(**validated_data)
 
 
 class GroupSerializer(serializers.ModelSerializer):
