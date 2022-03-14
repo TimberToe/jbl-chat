@@ -49,7 +49,9 @@ class ChatRoomMessageViewSet(viewsets.ModelViewSet):
     serializer_class = ChatRoomMessageSerializer
 
     def get_queryset(self):
-        return ChatRoomMessage.objects.filter(chatRoom=self.kwargs["chatRoom_pk"])
+        return ChatRoomMessage.objects.filter(
+            chatRoom=self.kwargs["chatRoom_pk"]
+        ).order_by("-postedTime")
 
     def perform_create(self, serializer):
 
