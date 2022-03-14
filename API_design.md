@@ -5,12 +5,11 @@ API_design.md
  - [GET] rooms/
    - lists rooms you are part of
  - [POST] rooms/ - Create a room
-    - users[] - other users to create the room with. Yourself always a part of the room??
+    - users[] - users to create the room with
  - [GET] rooms/{id}
     - information about the room
-       - Name (default: the users first names in a list)
  - [GET] rooms/{id}/messages
-    - Paginated result of messages ordered by newest first
+    - result of messages ordered by newest first
  - [POST] rooms/{id}/messages
     - Make a message
 
@@ -97,6 +96,10 @@ DONE
 Given that I have made a message
 When I delete the message
 Then the message is deleted from the database
+
+Given that a room has many messages
+When I fetch messages
+Then the return is paginated
 
 OUT OF SCOPE
 Given that I have a message
